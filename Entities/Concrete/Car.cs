@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Entitites.Abstract;
+using Core.Entities;
 
-namespace Entitites.Concrete
+namespace Entities.Concrete
 {
 	public class Car : IEntity
 	{

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using Business.Abstract;
 using DataAccess.Abstract;
-using Entitites.Concrete;
+using Entities.Concrete;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
@@ -16,22 +18,17 @@ namespace Business.Concrete
 			_carDal = carDal;
 		}
 
+		public Car GetById(int carId)
+		{
+			return _carDal.Get(p=> p.Id == carId);
+		}
+
 		public List<Car> GetAll()
 		{
 			return _carDal.GetAll();
 		}
 
-		public List<Car> GetCarsByBrandId(int brandId)
-		{
-			return _carDal.GetAll(p => p.BrandId == brandId);
-		}
-
-		public List<Car> GetCarsByColorId(int colorId)
-		{
-			return _carDal.GetAll(p => p.ColorId == colorId);
-		}
-
-		public void AddCar(Car car)
+		public void Add(Car car)
 		{
 			if(car.Description.Length >= 2 && car.DailyPrice > 0)
 				_carDal.Add(car);
@@ -39,17 +36,22 @@ namespace Business.Concrete
 				Console.WriteLine("Araba ismi minimum 2 karakter olmalıdır ve araba günlük fiyatı 0'dan büyük olmalıdır");
 		}
 
-		public void DeleteCar(Car car)
+		public void Delete(Car car)
 		{
 			_carDal.Delete(car);
 		}
 
-		public void UpdateCar(Car car)
+		public void Update(Car car)
 		{
 			if (car.Description.Length >= 2 && car.DailyPrice > 0)
 				_carDal.Update(car);
 			else
 				Console.WriteLine("Araba ismi minimum 2 karakter olmalıdır ve araba günlük fiyatı 0'dan büyük olmalıdır");
+		}
+
+		public List<CarDetailDto> GetCarDetails()
+		{
+			return _carDal.GetCarDetails();
 		}
 	}
 }
