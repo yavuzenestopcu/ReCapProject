@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -18,40 +20,65 @@ namespace Business.Concrete
 			_carDal = carDal;
 		}
 
-		public Car GetById(int carId)
+		public IDataResult<Car> GetById(int carId)
 		{
-			return _carDal.Get(p=> p.Id == carId);
+			return new SuccessDataResult<Car>(_carDal.Get(p => p.Id == carId));
 		}
 
-		public List<Car> GetAll()
+		public IDataResult<List<Car>> GetAll()
 		{
-			return _carDal.GetAll();
-		}
-
-		public void Add(Car car)
-		{
-			if(car.Description.Length >= 2 && car.DailyPrice > 0)
-				_carDal.Add(car);
+			if (DateTime.Now.Hour == 15)
+			{
+				return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
+			}
 			else
-				Console.WriteLine("Araba ismi minimum 2 karakter olmalıdır ve araba günlük fiyatı 0'dan büyük olmalıdır");
+			{
+				return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarsListed);
+			}
 		}
 
-		public void Delete(Car car)
-		{
-			_carDal.Delete(car);
-		}
-
-		public void Update(Car car)
+		public IResult Add(Car car)
 		{
 			if (car.Description.Length >= 2 && car.DailyPrice > 0)
-				_carDal.Update(car);
+			{
+				_carDal.Add(car);
+				return new SuccessResult(Messages.CarAdded);
+			}
 			else
-				Console.WriteLine("Araba ismi minimum 2 karakter olmalıdır ve araba günlük fiyatı 0'dan büyük olmalıdır");
+			{
+				return new ErrorResult(Messages.CarNameInvalid + "\n" + Messages.PriceInvalid);
+			}
 		}
 
-		public List<CarDetailDto> GetCarDetails()
+		public IResult Delete(Car car)
 		{
-			return _carDal.GetCarDetails();
+			_carDal.Delete(car);
+			return new SuccessResult(Messages.CarDeleted);
+		}
+
+		public IResult Update(Car car)
+		{
+			if (car.Description.Length >= 2 && car.DailyPrice > 0)
+			{
+				_carDal.Update(car);
+				return new SuccessResult(Messages.CarUpdated);
+			}
+			else
+			{
+				return new ErrorResult(Messages.CarNameInvalid + "\n" + Messages.PriceInvalid);
+			}
+		}
+
+		public IDataResult<List<CarDetailDto>> GetCarDetails()
+		{
+			if (DateTime.Now.Hour == 15)
+			{
+				return new ErrorDataResult<List<CarDetailDto>>(Messages.MaintenanceTime);
+			}
+			else
+			{
+				return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
+			}
 		}
 	}
 }
