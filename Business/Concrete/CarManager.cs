@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 using System.Text;
 using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -27,7 +29,7 @@ namespace Business.Concrete
 
 		public IDataResult<List<Car>> GetAll()
 		{
-			if (DateTime.Now.Hour == 15)
+			if (DateTime.Now.Hour == 18)
 			{
 				return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
 			}
@@ -37,17 +39,11 @@ namespace Business.Concrete
 			}
 		}
 
+		[ValidationAspect(typeof(CarValidator))]
 		public IResult Add(Car car)
 		{
-			if (car.Description.Length >= 2 && car.DailyPrice > 0)
-			{
-				_carDal.Add(car);
-				return new SuccessResult(Messages.CarAdded);
-			}
-			else
-			{
-				return new ErrorResult(Messages.CarNameInvalid + "\n" + Messages.PriceInvalid);
-			}
+			_carDal.Add(car);
+			return new SuccessResult(Messages.CarAdded);
 		}
 
 		public IResult Delete(Car car)
