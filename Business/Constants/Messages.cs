@@ -40,5 +40,10 @@ namespace Business.Constants
 		public static string CarNotDelivered = "Araç henüz teslim edilmedi.";
 
 		public static string MaintenanceTime = "Bakım zamanı";
+		
+		public static string ImageCountOfCarError = "Bir aracın en fazla 5 tane resmi olabilir.";
+		public static string ImageAdded = "Resim eklendi.";
+		public static string ImageDeleted = "Resim silindi";
+		public static string ImageUpdated = "Resim güncellendi.";
 	}
 }
