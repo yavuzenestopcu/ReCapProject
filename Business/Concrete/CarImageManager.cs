@@ -62,13 +62,10 @@ namespace Business.Concrete
 		public IResult Update(IFormFile file, CarImage carImage)
 		{
 			string filePath = _fileService.Update(file, carImage.ImagePath, PathConstants.ImagesRootPath);
-<<<<<<< HEAD
 			CarImage updatedCarImage = new CarImage { Id = carImage.Id, CarId = carImage.CarId, ImagePath = filePath, Date = DateTime.Now };
 			_carImageDal.Update(updatedCarImage);
-=======
 			//CarImage updateCarImage = new CarImage { Id = carImage.Id, CarId = carImage.CarId, ImagePath = filePath, Date = DateTime.Now };
 			_carImageDal.Update(carImage);
->>>>>>> 19a388644960aefe3fc0220efb5334e5c49d38d5
 			return new SuccessResult(Messages.ImageUpdated);
 		}
 
